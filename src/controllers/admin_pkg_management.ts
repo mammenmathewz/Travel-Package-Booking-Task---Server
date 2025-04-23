@@ -4,7 +4,7 @@ import { TravelPackage } from "../models/PackageSchema";
 
 export const addPackage= async(req:Request,res:Response):Promise<Response>=>{
     try {
-        const{from,to,startDate,endDate,basePrice,includedServices} = req.body
+        const{from,to,startDate,endDate,basePrice,packageDetails,includedServices} = req.body
         console.log(req.body);
         
         if(!from || !to || !startDate || !endDate || !basePrice){
@@ -17,6 +17,7 @@ export const addPackage= async(req:Request,res:Response):Promise<Response>=>{
             startDate,
             endDate,
             basePrice,
+            packageDetails,
             includedServices: {
               food: includedServices?.food || false,
               accommodation: includedServices?.accommodation || false,
@@ -36,7 +37,7 @@ export const addPackage= async(req:Request,res:Response):Promise<Response>=>{
 export const updatePackage = async (req: Request, res: Response): Promise<Response> => {
     try {
       const { id } = req.params;
-      const { from, to, startDate, endDate, basePrice, includedServices } = req.body;
+      const { from, to, startDate, endDate, basePrice,packageDetails, includedServices } = req.body;
   
       const updated = await TravelPackage.findByIdAndUpdate(
         id,
@@ -46,6 +47,7 @@ export const updatePackage = async (req: Request, res: Response): Promise<Respon
           startDate,
           endDate,
           basePrice,
+          packageDetails,
           includedServices: {
             food: includedServices?.food || false,
             accommodation: includedServices?.accommodation || false,

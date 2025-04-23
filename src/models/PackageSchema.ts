@@ -6,6 +6,7 @@ const packageSchema = new Schema({
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
   basePrice: { type: Number, required: true },
+  packageDetails: { type: String, required: true },
   includedServices: {
     food: { type: Boolean, default: false },
     accommodation: { type: Boolean, default: false }
