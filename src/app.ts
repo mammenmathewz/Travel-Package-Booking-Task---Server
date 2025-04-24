@@ -7,7 +7,7 @@ import router from "./routes/index"
 
 const app = express()
 app.use(cors({
-    origin:"https://travalpackage.netlify.app/"
+    origin:"*"
 }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
