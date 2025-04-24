@@ -3,6 +3,8 @@ import { validation } from "../services/authValidation";
 import { User } from "../models/UserSchema";
 import { HashService } from "../services/hashService";
 import { generateToken } from "../services/jwt";
+import { adminAuth } from "../services/firebase";
+
 
 const hashService = new HashService();
 
@@ -72,3 +74,43 @@ export const login = async (req: Request, res: Response):Promise<Response> => {
         return res.status(500).json({ message: "Server error" });
     }
 };
+
+export const googleLogin = async (req:Request, res:Response) => {
+    const { token: idToken } = req.body; 
+  
+    try {
+      const decoded = await adminAuth.verifyIdToken(idToken);
+      const { email, name, picture } = decoded;
+  
+      let user = await User.findOne({ email });
+  
+      if (!user) {
+        user = await User.create({
+          name,
+          email,
+          profilePic: picture,
+          isGoogleUser: true,
+          role: "user",
+        });
+      }
+  
+      const token = generateToken({
+        id: user._id,
+        role: user.role,
+      });
+  
+      return res.status(200).json({
+        token,
+        user: {
+          id: user._id,
+          name: user.name,
+          role: user.role,
+          profilePic: user.profilePic,
+        },
+      });
+    } catch (err) {
+      console.error("Google login failed:", err);
+      return res.status(401).json({ message: "Invalid token" });
+    }
+  };
+  
