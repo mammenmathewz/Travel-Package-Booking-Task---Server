@@ -10,9 +10,7 @@ const hashService = new HashService();
 
 export const signup = async (req: Request, res: Response): Promise<Response> => {
   const { name, email, password } = req.body;
-  console.log("Signup data:", req.body);
   
-
   if (!isValidEmailAndPassword(email, password)) {
     return res.status(400).json({ message: "Invalid email or password format" });
   }

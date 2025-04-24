@@ -5,7 +5,6 @@ import { TravelPackage } from "../models/PackageSchema";
 export const addPackage= async(req:Request,res:Response):Promise<Response>=>{
     try {
         const{from,to,startDate,endDate,basePrice,packageDetails,includedServices} = req.body
-        console.log(req.body);
         
         if(!from || !to || !startDate || !endDate || !basePrice){
             return res.status(400).json({message:"Please provide all required fields"})
