@@ -1,5 +1,5 @@
 import { Request,Response } from "express";
-import { validation } from "../services/authValidation";
+import { isValidEmailAndPassword } from "../services/authValidation";
 import { User } from "../models/UserSchema";
 import { HashService } from "../services/hashService";
 import { generateToken } from "../services/jwt";
@@ -8,45 +8,42 @@ import { adminAuth } from "../services/firebase";
 
 const hashService = new HashService();
 
-export const signup = async (req: Request, res: Response):Promise<Response> => {
-    try {
-        const {name,email, password} = req.body;
-        
-        if (!validation(email, password)) {
-            return res.status(400).json({ message: "Invalid email or password format" });
-        }
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ message: "User already exists" });
-        }
-        
-        const hashedPassword = await hashService.hashPassword(password);
-        const newUser = new User({name, email, password: hashedPassword });
-        await newUser.save();
+export const signup = async (req: Request, res: Response): Promise<Response> => {
+  const { name, email, password } = req.body;
+  console.log("Signup data:", req.body);
+  
 
-        const token = generateToken({ id: newUser._id, email: newUser.email });
-        return res.status(201).json({ message: "User created successfully",   token,
-            user: {
-                id: newUser._id,
-                name: newUser.name,
-                email: newUser.email,
-                role: newUser.role,
-            }, });
+  if (!isValidEmailAndPassword(email, password)) {
+    return res.status(400).json({ message: "Invalid email or password format" });
+  }
 
-    } catch (error) {
-        console.error("Signup error:", error);
-        return res.status(500).json({ message: "Server error" });
-    }
-}
+  const userExists = await User.findOne({ email });
+  if (userExists) {
+    return res.status(400).json({ message: "User already exists" });
+  }
+
+  const hashedPassword = await hashService.hashPassword(password);
+  const newUser = await User.create({ name, email, password: hashedPassword });
+
+  const token = generateToken({ id: newUser._id, email: newUser.email });
+
+  return res.status(201).json({
+    message: "User created successfully",
+    token,
+    user: {
+      id: newUser._id,
+      name: newUser.name,
+      email: newUser.email,
+      role: newUser.role,
+    },
+  });
+};
 
 export const login = async (req: Request, res: Response):Promise<Response> => {
     try {
         const { email, password } = req.body;
 
-        if (!validation(email, password)) {
-            return res.status(400).json({ message: "Invalid email or password format" });
-        }
-
+      
         const user = await User.findOne({ email });
         if (!user || !user.password) {
             return res.status(404).json({ message: "User not found" });
