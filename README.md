@@ -9,7 +9,7 @@ This is the backend API for the Travel Package Booking task built with Node.js, 
 - **JWT for secure authentication**
 - **Google OAuth (via Firebase)**
 - **bcrypt for password hashing**
-- **CORS, dotenv, helmet for middleware**
+- **CORS, dotenv**
 
 ## 📁 Project Structure
 
