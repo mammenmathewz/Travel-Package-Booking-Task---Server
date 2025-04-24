@@ -11,6 +11,7 @@ const packageSchema = new Schema({
     food: { type: Boolean, default: false },
     accommodation: { type: Boolean, default: false }
   },
+  deleted: { type: Boolean, default: false },
 }, { timestamps: true });
 
 export const TravelPackage = model("TravelPackage", packageSchema);

@@ -66,23 +66,31 @@ export const updatePackage = async (req: Request, res: Response): Promise<Respon
   };
   
 
-export const deletePackage = async (req: Request, res: Response): Promise<Response> => {
+  export const deletePackage = async (req: Request, res: Response): Promise<Response> => {
     try {
       const { id } = req.params;
-      const deleted = await TravelPackage.findByIdAndDelete(id);
   
-      if (!deleted) return res.status(404).json({ message: "Package not found" });
+      const updated = await TravelPackage.findByIdAndUpdate(
+        id,
+        { deleted: true },
+        { new: true }
+      );
   
-      return res.json({ message: "Package deleted successfully" });
+      if (!updated) {
+        return res.status(404).json({ message: "Package not found" });
+      }
+  
+      return res.json({ message: "Package soft-deleted successfully" });
     } catch (err) {
       console.error(err);
-      return res.status(500).json({ error: "Failed to delete travel package" });
+      return res.status(500).json({ error: "Failed to soft delete travel package" });
     }
   };
   
-export const getAllPackages = async (_req: Request, res: Response): Promise<Response> => {
+  
+  export const getAllPackages = async (_req: Request, res: Response): Promise<Response> => {
     try {
-      const packages = await TravelPackage.find().sort({ createdAt: -1 });
+      const packages = await TravelPackage.find({ deleted: false }).sort({ createdAt: -1 });
       return res.json({ packages });
     } catch (err) {
       console.error(err);
