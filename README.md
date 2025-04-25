@@ -111,7 +111,7 @@ You can use Postman or ThunderClient to test endpoints. Auth routes will return 
 ## 🌐 Live API
 
 ```
-https://travalpackage.netlify.app/
+https://travel-package-booking-task-server.onrender.com
 ```
 
 ## 🤝 Client Repository
