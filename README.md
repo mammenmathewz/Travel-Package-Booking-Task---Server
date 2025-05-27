@@ -122,4 +122,4 @@ You can find the frontend code here: [https://github.com/mammenmathewz/Travel-Pa
 
 ## 📄 License
 
-This project is submitted as part of a technical assessment for Cochin Computing.
+This project is submitted as part of a technical assessment for _______________________.
